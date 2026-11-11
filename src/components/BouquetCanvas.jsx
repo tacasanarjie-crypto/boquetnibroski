@@ -215,11 +215,12 @@ export default function BouquetCanvas({ isRevealed, onBouquetClick }) {
       }
     };
 
+    const baseUrl = import.meta.env.BASE_URL || '/';
     const fbxLoader = new FBXLoader(manager);
-    fbxLoader.setResourcePath('/bouquet/fbx/textures/');
+    fbxLoader.setResourcePath(`${baseUrl}bouquet/fbx/textures/`);
 
     fbxLoader.load(
-      '/bouquet/fbx/SM_BuquetA_v1.1.fbx',
+      `${baseUrl}bouquet/fbx/SM_BuquetA_v1.1.fbx`,
       (fbxModel) => {
         if (isDisposed) return;
 
