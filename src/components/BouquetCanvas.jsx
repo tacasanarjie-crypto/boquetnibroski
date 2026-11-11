@@ -378,7 +378,6 @@ export default function BouquetCanvas({ isRevealed, onBouquetClick }) {
         hoveredMesh = foundFlower;
 
         if (hoveredMesh && hoveredMesh.userData) {
-          romanticAudio.playFlowerChime(580 + Math.random() * 300);
           setMeshHighlight(hoveredMesh, true);
           setTooltipState({
             name: hoveredMesh.userData.name,

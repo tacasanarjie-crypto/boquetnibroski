@@ -1,138 +1,129 @@
-// Romantic Audio Engine using Web Audio API
-// Generates a soothing, emotional, romantic piano & harp melody without external audio asset dependencies.
+// Romantic Audio Engine
+// Plays the custom Sunflower Lo-Fi background track and Web Audio API interactive flower chimes & sparkles.
+
+const BGM_PATH = `${import.meta.env.BASE_URL || '/'}audio/sunflower-lofi.mp3`;
 
 class RomanticAudioEngine {
   constructor() {
     this.ctx = null;
+    this.bgm = null;
     this.isPlaying = false;
     this.isMuted = false;
     this.masterGain = null;
-    this.musicGain = null;
     this.sfxGain = null;
-    this.timer = null;
-    this.step = 0;
+    this.fadeTimer = null;
+    this.targetVolume = 0.55;
   }
 
   init() {
-    if (this.ctx) return;
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    this.ctx = new AudioContext();
+    if (!this.ctx) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext) {
+        this.ctx = new AudioContext();
 
-    this.masterGain = this.ctx.createGain();
-    this.masterGain.gain.setValueAtTime(0.7, this.ctx.currentTime);
-    this.masterGain.connect(this.ctx.destination);
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.7, this.ctx.currentTime);
+        this.masterGain.connect(this.ctx.destination);
 
-    this.musicGain = this.ctx.createGain();
-    this.musicGain.gain.setValueAtTime(0.5, this.ctx.currentTime);
-    this.musicGain.connect(this.masterGain);
+        this.sfxGain = this.ctx.createGain();
+        this.sfxGain.gain.setValueAtTime(0.4, this.ctx.currentTime);
+        this.sfxGain.connect(this.masterGain);
+      }
+    }
 
-    this.sfxGain = this.ctx.createGain();
-    this.sfxGain.gain.setValueAtTime(0.4, this.ctx.currentTime);
-    this.sfxGain.connect(this.masterGain);
+    if (!this.bgm) {
+      const audio = new Audio(BGM_PATH);
+      audio.loop = true;
+      audio.preload = 'auto';
+      audio.volume = 0;
+      audio.muted = this.isMuted;
+      this.bgm = audio;
+    }
   }
 
-  // Play a soft, felted piano tone with realistic acoustic-style harmonics
-  playPianoNote(freq, time, duration = 3.2, volume = 0.25) {
-    if (!this.ctx || this.isMuted) return;
+  fadeInBgm() {
+    if (!this.bgm) return;
+    if (this.fadeTimer) {
+      clearInterval(this.fadeTimer);
+      this.fadeTimer = null;
+    }
 
-    const fundamental = this.ctx.createOscillator();
-    const harmonic1 = this.ctx.createOscillator();
-    const harmonic2 = this.ctx.createOscillator();
-    const noteGain = this.ctx.createGain();
-    const filter = this.ctx.createBiquadFilter();
-
-    fundamental.type = 'triangle';
-    harmonic1.type = 'sine';
-    harmonic2.type = 'sine';
-
-    fundamental.frequency.setValueAtTime(freq, time);
-    harmonic1.frequency.setValueAtTime(freq * 2, time);
-    harmonic2.frequency.setValueAtTime(freq * 3, time);
-
-    // Warm felt filter
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(800, time);
-    filter.frequency.exponentialRampToValueAtTime(350, time + duration);
-
-    // Natural piano attack & decay envelope
-    noteGain.gain.setValueAtTime(0.0001, time);
-    noteGain.gain.linearRampToValueAtTime(volume, time + 0.025);
-    noteGain.gain.exponentialRampToValueAtTime(volume * 0.45, time + 0.4);
-    noteGain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
-
-    fundamental.connect(filter);
-    harmonic1.connect(filter);
-    harmonic2.connect(filter);
-    filter.connect(noteGain);
-    noteGain.connect(this.musicGain);
-
-    fundamental.start(time);
-    harmonic1.start(time);
-    harmonic2.start(time);
-    fundamental.stop(time + duration);
-    harmonic1.stop(time + duration);
-    harmonic2.stop(time + duration);
+    this.bgm.volume = 0;
+    const step = 0.03;
+    this.fadeTimer = setInterval(() => {
+      if (!this.bgm || !this.isPlaying) {
+        clearInterval(this.fadeTimer);
+        this.fadeTimer = null;
+        return;
+      }
+      const nextVol = Math.min(this.targetVolume, this.bgm.volume + step);
+      this.bgm.volume = nextVol;
+      if (nextVol >= this.targetVolume) {
+        clearInterval(this.fadeTimer);
+        this.fadeTimer = null;
+      }
+    }, 80);
   }
 
   startMusic() {
     this.init();
     if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume();
+      this.ctx.resume().catch(() => {});
     }
-    if (this.isPlaying) return;
+
+    if (!this.bgm) return;
+
+    this.bgm.muted = this.isMuted;
+    if (this.isPlaying && !this.bgm.paused) return;
+
     this.isPlaying = true;
-
-    // A dreamy romantic chord sequence (Ebmaj9 -> Cm9 -> Abmaj7 -> Bbadd9)
-    // Frequencies (Hz)
-    const chords = [
-      // Ebmaj9
-      [155.56, 233.08, 311.13, 392.00, 466.16, 587.33],
-      // Gm7
-      [196.00, 293.66, 392.00, 466.16, 587.33, 698.46],
-      // Abmaj9
-      [207.65, 261.63, 311.13, 392.00, 523.25, 622.25],
-      // Bb9sus4 -> Bb
-      [233.08, 349.23, 466.16, 523.25, 587.33, 783.99]
-    ];
-
-    const beatInterval = 650; // ms per arpeggiated note
-
-    const schedulePattern = () => {
-      if (!this.isPlaying) return;
-      const chordIndex = Math.floor(this.step / 8) % chords.length;
-      const chord = chords[chordIndex];
-      const notePattern = [0, 2, 4, 3, 5, 4, 2, 1]; // gentle wave arpeggio
-      const noteIdx = notePattern[this.step % 8];
-      const freq = chord[noteIdx % chord.length];
-
-      const now = this.ctx.currentTime;
-      // Root bass note on beat 0
-      if (this.step % 8 === 0) {
-        this.playPianoNote(chord[0] / 2, now, 5.0, 0.28);
-      }
-      this.playPianoNote(freq, now, 3.8, 0.16 + (Math.sin(this.step) * 0.04));
-
-      this.step++;
-      this.timer = setTimeout(schedulePattern, beatInterval);
-    };
-
-    schedulePattern();
+    const playPromise = this.bgm.play();
+    if (playPromise && typeof playPromise.then === 'function') {
+      playPromise
+        .then(() => {
+          this.fadeInBgm();
+        })
+        .catch(() => {
+          this.isPlaying = false;
+        });
+    } else {
+      this.fadeInBgm();
+    }
   }
 
   stopMusic() {
     this.isPlaying = false;
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
+    if (this.fadeTimer) {
+      clearInterval(this.fadeTimer);
+      this.fadeTimer = null;
+    }
+    if (this.bgm) {
+      this.bgm.pause();
     }
   }
 
   toggleMute() {
     this.isMuted = !this.isMuted;
+
     if (this.masterGain && this.ctx) {
       this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.7, this.ctx.currentTime);
     }
+
+    if (this.bgm) {
+      this.bgm.muted = this.isMuted;
+      if (!this.isMuted) {
+        if (this.bgm.paused) {
+          this.isPlaying = true;
+          this.bgm.volume = this.targetVolume;
+          this.bgm.play().catch(() => {
+            this.isPlaying = false;
+          });
+        } else if (this.bgm.volume === 0) {
+          this.bgm.volume = this.targetVolume;
+        }
+      }
+    }
+
     return this.isMuted;
   }
 

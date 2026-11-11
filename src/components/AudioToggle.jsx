@@ -5,7 +5,10 @@ export default function AudioToggle({ isMusicActive }) {
   const [isMuted, setIsMuted] = useState(false);
 
   const toggleSound = () => {
-    if (!romanticAudio.ctx) {
+    if (!romanticAudio.isPlaying) {
+      if (romanticAudio.isMuted) {
+        romanticAudio.toggleMute();
+      }
       romanticAudio.startMusic();
       setIsMuted(false);
       return;
@@ -20,7 +23,7 @@ export default function AudioToggle({ isMusicActive }) {
     <button
       onClick={toggleSound}
       id="btn-music-toggle"
-      aria-label={isMuted ? 'Unmute romantic music' : 'Mute romantic music'}
+      aria-label={isMuted ? 'Unmute Sunflower Lo-Fi music' : 'Mute Sunflower Lo-Fi music'}
       className="audio-toggle-btn glass-card"
     >
       {!isMuted ? (
@@ -33,7 +36,7 @@ export default function AudioToggle({ isMusicActive }) {
         <span className="text-xs">🔇</span>
       )}
       <span className="audio-toggle-label font-sans">
-        {isMuted ? 'Play Music' : 'Romantic Piano'}
+        {isMuted ? 'Play Music' : 'Sunflower Lo-Fi'}
       </span>
     </button>
   );
