@@ -1,0 +1,609 @@
+/* Romantic App Custom Styles & Bouquet as Full Background */
+
+.main-experience {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100vh;
+  padding: 0 2rem;
+}
+
+.experience-header {
+  padding-top: 0.65rem;
+  padding-bottom: 0.15rem;
+  pointer-events: auto;
+}
+
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.22rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-family: var(--font-serif);
+  color: var(--color-rose-700);
+  margin-bottom: 0.15rem;
+}
+
+.header-title {
+  font-size: clamp(2rem, 3.1vw, 2.75rem);
+  color: var(--color-rose-600);
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+.romantic-header-glow {
+  text-shadow: 0 2px 12px rgba(244, 63, 94, 0.22);
+}
+
+/* 3D Bouquet Background Layer (No Card Box) */
+.bouquet-background-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Bouquet and Messages Overlay */
+.bouquet-messages-overlay {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0.25rem auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 2.5rem;
+  align-items: center;
+  flex: 1;
+  pointer-events: none;
+}
+
+/* Left open area: Completely transparent, no card, no border, no shadow */
+.bouquet-open-area {
+  width: 100%;
+  height: 100%;
+  min-height: 430px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 0 0 2.75rem 0;
+}
+
+.bouquet-floating-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  color: var(--color-rose-800);
+  box-shadow: 0 8px 20px -4px rgba(244, 63, 94, 0.2);
+  pointer-events: auto;
+}
+
+.tag-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-rose-500);
+  box-shadow: 0 0 8px var(--color-rose-400);
+}
+
+/* Bottom Controls Bar for the 3D Bouquet */
+.bouquet-controls-bar {
+  bottom: 1.15rem;
+  left: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.interaction-hint-pill {
+  white-space: nowrap;
+  font-size: 0.74rem;
+  padding: 0.38rem 0.9rem;
+  color: var(--color-rose-800);
+  box-shadow: 0 4px 15px -2px rgba(244, 63, 94, 0.14);
+}
+
+.reset-view-btn {
+  cursor: pointer;
+  color: var(--color-rose-700);
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 18px -3px rgba(244, 63, 94, 0.18);
+  pointer-events: auto;
+}
+
+.reset-view-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-2px);
+}
+
+.flower-tooltip {
+  text-align: center;
+  padding: 0.55rem 1rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(244, 63, 94, 0.25);
+}
+
+/* Right Side: Messages Column floating beside the Bouquet */
+.messages-column {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.love-letter-wrapper {
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.love-letter-wrapper.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.messages-beside-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+/* Message Tabs above Letter */
+.message-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.message-tab-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.42rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  color: var(--color-rose-800);
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(254, 205, 211, 0.75);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+.message-tab-pill:hover {
+  background: rgba(255, 255, 255, 0.96);
+  transform: translateY(-1px);
+}
+
+.message-tab-pill.active {
+  background: linear-gradient(135deg, #f43f5e 0%, #ec4899 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 8px 20px -4px rgba(244, 63, 94, 0.45);
+}
+
+/* Main Love Letter Card beside the bouquet */
+.love-letter-card {
+  position: relative;
+  border-radius: 26px;
+  padding: 1.25rem 1.65rem;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(254, 205, 211, 0.78);
+  box-shadow: 0 20px 48px -12px rgba(225, 29, 72, 0.18);
+  transition: all 0.4s ease;
+}
+
+.love-letter-card:hover {
+  box-shadow: 0 26px 54px -12px rgba(225, 29, 72, 0.25);
+}
+
+.corner-star {
+  position: absolute;
+  color: rgba(244, 114, 182, 0.45);
+  font-size: 0.95rem;
+  pointer-events: none;
+}
+.corner-star.top-left { top: 0.75rem; left: 1rem; }
+.corner-star.top-right { top: 0.75rem; right: 1rem; }
+.corner-star.bottom-left { bottom: 0.75rem; left: 1rem; }
+.corner-star.bottom-right { bottom: 0.75rem; right: 1rem; }
+
+.letter-seal-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+}
+
+.letter-wax-seal {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #e11d48, #fb7185);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: 0 8px 18px -4px rgba(225, 29, 72, 0.4);
+  border: 2px solid #ffffff;
+}
+
+.letter-badge-tag {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-rose-500);
+  font-weight: 600;
+}
+
+.letter-title {
+  font-size: clamp(1.6rem, 2.2vw, 2.05rem);
+  color: var(--color-rose-600);
+  font-weight: 400;
+  margin-bottom: 0.55rem;
+  line-height: 1.12;
+}
+
+.letter-body {
+  color: rgba(136, 19, 55, 0.88);
+  font-size: 0.92rem;
+  line-height: 1.54;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.letter-divider {
+  width: 56px;
+  height: 1px;
+  background: rgba(253, 164, 175, 0.7);
+  margin: 0.1rem 0;
+}
+
+.letter-signoff {
+  font-size: 1.45rem;
+  color: var(--color-rose-600);
+  padding-top: 0.05rem;
+}
+
+/* Action Buttons inside Letter */
+.letter-actions {
+  margin-top: 0.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.btn-next-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.56rem 1.05rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-rose-700);
+  background: rgba(255, 241, 242, 0.9);
+  border: 1px solid rgba(253, 164, 175, 0.7);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-next-note:hover {
+  background: #ffe4e6;
+  transform: translateY(-1px);
+}
+
+.btn-surprise-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #f43f5e 0%, #ec4899 55%, #fb7185 100%);
+  border: none;
+  box-shadow: 0 10px 22px -5px rgba(244, 63, 94, 0.45);
+  cursor: pointer;
+  transition: all 0.28s ease;
+}
+
+.btn-surprise-trigger:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 28px -5px rgba(244, 63, 94, 0.6);
+}
+
+/* Sweet Mini Notes Grid */
+.mini-notes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.mini-note-card {
+  padding: 0.65rem 0.75rem;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.mini-note-card:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.mini-note-emoji {
+  font-size: 1rem;
+}
+
+.mini-note-text {
+  font-size: 0.74rem;
+  line-height: 1.35;
+  color: var(--color-rose-800);
+  font-style: italic;
+}
+
+.experience-footer {
+  padding: 0.35rem 0 0.75rem;
+  font-size: 0.74rem;
+  color: var(--color-rose-500);
+  pointer-events: auto;
+}
+
+/* Intro Screen Styles */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+  background: radial-gradient(
+    ellipse at 50% 40%,
+    rgba(255, 245, 247, 0.96) 0%,
+    rgba(254, 226, 236, 0.96) 45%,
+    rgba(243, 232, 255, 0.97) 80%,
+    rgba(237, 219, 246, 0.98) 100%
+  );
+  backdrop-filter: blur(8px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.intro-overlay.fading-out {
+  opacity: 0;
+  transform: scale(1.04);
+  pointer-events: none;
+}
+
+.intro-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.intro-particle {
+  position: absolute;
+}
+
+.intro-emblem {
+  width: 80px;
+  height: 80px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(254, 205, 211, 0.75);
+  box-shadow: 0 12px 28px -6px rgba(244, 63, 94, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.intro-content {
+  position: relative;
+  z-index: 10;
+  max-width: 32rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.35rem;
+}
+
+.intro-title {
+  font-size: clamp(3rem, 6vw, 4.2rem);
+  color: var(--color-rose-600);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.intro-subtitle {
+  font-size: 1.15rem;
+  color: rgba(159, 18, 57, 0.8);
+  font-style: italic;
+}
+
+.intro-caption {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(225, 29, 72, 0.7);
+  font-weight: 600;
+}
+
+/* Audio Toggle Styles */
+.audio-toggle-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1.25rem;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--color-rose-700);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.audio-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px);
+}
+
+.music-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+  width: 14px;
+}
+
+.music-bar {
+  width: 2.5px;
+  background: var(--color-rose-500);
+  border-radius: 9999px;
+}
+
+/* Surprise Modal Styles */
+.surprise-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(76, 5, 25, 0.42);
+  backdrop-filter: blur(8px);
+}
+
+.surprise-modal-card {
+  position: relative;
+  max-width: 32rem;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 28px;
+  padding: 2.25rem;
+  border: 1px solid rgba(254, 205, 211, 0.85);
+  box-shadow: 0 25px 50px -12px rgba(244, 63, 94, 0.3);
+  text-align: center;
+}
+
+.surprise-icon-badge {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.25rem;
+  border-radius: 9999px;
+  background: rgba(255, 228, 230, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.85rem;
+}
+
+.surprise-title {
+  font-size: 2.25rem;
+  color: var(--color-rose-600);
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
+.surprise-quote {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--color-rose-900);
+  font-style: italic;
+  margin-bottom: 1.75rem;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1023px) {
+  .main-experience {
+    padding: 0 1.25rem;
+  }
+
+  .bouquet-messages-overlay {
+    grid-template-columns: 1fr;
+    max-width: 660px;
+    gap: 1.25rem;
+  }
+
+  .bouquet-open-area {
+    min-height: 360px;
+    justify-content: center;
+    padding-bottom: 0.75rem;
+  }
+
+  .bouquet-controls-bar {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    bottom: auto;
+  }
+
+  .interaction-hint-pill {
+    display: none;
+  }
+
+  .love-letter-wrapper {
+    transform: translateY(24px);
+  }
+
+  .love-letter-wrapper.revealed {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .main-experience {
+    padding: 0 0.9rem;
+  }
+
+  .experience-header {
+    padding-top: 3.15rem;
+  }
+
+  .audio-toggle-btn {
+    top: 1rem;
+    right: 1rem;
+    padding: 0.45rem 0.65rem;
+  }
+
+  .audio-toggle-label {
+    display: none;
+  }
+
+  .love-letter-card {
+    padding: 1.35rem 1.2rem;
+  }
+
+  .mini-notes-grid {
+    grid-template-columns: 1fr;
+  }
+}
